@@ -115,6 +115,7 @@ public class StartSimpleHttpServer {
         Logger.help("Commands:");
         Logger.help("   help     - print help menu");
         Logger.help("   dir      - set the directory of which contents should be made available on the website");
+        Logger.help("              Files will be uploaded to this directory.");
         Logger.help("              Note: this will also display subdirectory contents");
         Logger.help("              Default: Directory location of this program (jar file)");
         Logger.help("              Example: dir=C:\\Users\\my_user\\Desktop");

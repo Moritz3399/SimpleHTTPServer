@@ -12,16 +12,17 @@ public class FileUpload {
         int footerEnd = findStringInByteArray(requestBytes, boundary, headerEnd);
         // extract filename from header
         byte[] headerBytes = Arrays.copyOfRange(requestBytes, 0, headerEnd);
-        // TODO: Check if file with filename already exists!
         String filename = new String(headerBytes);
         filename = filename.substring(filename.indexOf("filename=\""));
         filename = filename.substring(filename.indexOf("\"")+ 1);
         filename = filename.substring(0, filename.indexOf("\""));
+        // validate filename not to overwrite an existing file
+        // also adds absolute path
+        filename = validateFilename(filename);
         // write file to disk
         byte[] newFileBytes = Arrays.copyOfRange(requestBytes, headerEnd, footerEnd - boundary.length());
         FileOutputStream fos = null;
         try {
-            // TODO: Write file to directory specified in config
             fos = new FileOutputStream(new File(filename));
             fos.write(newFileBytes);
             fos.close();
@@ -71,6 +72,21 @@ public class FileUpload {
         return -1;
     }
 
+    // validate filename not to overwrite an existing file
+    // also adds absolute path
+    private static String validateFilename(String filename){
+        File file = new File(Config.pathToFiles + Config.fileSeparator + filename);
+        int i = 1;
+        while(file.exists()) {
+            if (filename.contains(".")) {
+                int lastDot = filename.lastIndexOf(".");
+                file = new File(Config.pathToFiles + Config.fileSeparator + filename.substring(0, lastDot) + "("+ i++ + ")" + filename.substring(lastDot));
 
+            } else {
+                file = new File(Config.pathToFiles + Config.fileSeparator + filename + "("+ i++ + ")");
+            }
+        }
+        return file.getAbsolutePath();
+    }
 
 }
