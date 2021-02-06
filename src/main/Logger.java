@@ -1,3 +1,5 @@
+package main;
+
 import java.time.LocalTime;
 
 public class Logger {

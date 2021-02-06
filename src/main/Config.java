@@ -1,3 +1,5 @@
+package main;
+
 import com.sun.net.httpserver.HttpServer;
 
 public class Config {
@@ -10,6 +12,8 @@ public class Config {
     public static String title = "Simple HTTP Server";
     public static String faviconUnicodeEmoji = "&#128579;";
     public static int logLevel = 0;
+    public static boolean allowUpload = true;
+    public static boolean allowPrint = true;
 
 
     public static void logConfig(){

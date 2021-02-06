@@ -1,4 +1,8 @@
+package main;
+
 import com.sun.net.httpserver.HttpServer;
+import html.IndexHTML;
+import html.UploadHTML;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -15,10 +19,21 @@ public class Server {
                     "</text>" +
                     "</svg>").getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8
     ).getBytes();
+    private final HttpServer server;
 
     public Server() throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(Config.PORT), 0);
+        this.server = HttpServer.create(new InetSocketAddress(Config.PORT), 0);
         Config.server = server;
+        this.createDefaultContext();
+        this.createUploadContext();
+        server.setExecutor(null);
+        server.start();
+        Logger.always("Server started!");
+        Logger.always(String.format("Get to your files on %s:%s", Config.IP, Config.PORT));
+    }
+
+
+    private void createDefaultContext() {
         server.createContext("/", httpExchange -> {
             String url = httpExchange.getRequestURI().toASCIIString();
             url = url.replace("%20", " ");
@@ -62,10 +77,47 @@ public class Server {
             }
             out.close();
         });
-        server.setExecutor(null);
-        server.start();
-        Logger.always("Server started!");
-        Logger.always(String.format("Get to your files on %s:%s", Config.IP, Config.PORT));
     }
+
+    private void createUploadContext() {
+        server.createContext("/upload", httpExchange -> {
+                    String url = httpExchange.getRequestURI().toASCIIString();
+                    url = url.replace("%20", " ");
+                    Logger.debug(String.format("Requested: %s", url));
+                    OutputStream out = httpExchange.getResponseBody();
+                    if (url.equals("/upload")) { // index.html
+
+                        if (httpExchange.getRequestMethod().equalsIgnoreCase("post")) {
+                            String contentType = httpExchange.getRequestHeaders().getFirst("Content-Type");
+                            // use the content length from the header. InputStream.available will crash with no error
+                            int contentLength = Integer.parseInt(httpExchange.getRequestHeaders().getFirst("Content-Length"));
+                            String boundary = contentType.substring(contentType.indexOf("boundary=") + 9);
+                            InputStream in = httpExchange.getRequestBody();
+                            String filename = FileUpload.handleRequestBody(in, boundary,contentLength);
+                            Logger.always("Uploaded: " + filename);
+                        }
+
+                        byte[] uploadHtmlBytes = UploadHTML.get().getBytes();
+                        httpExchange.getResponseHeaders().add("Content-Type", "text/html");
+                        httpExchange.sendResponseHeaders(200, uploadHtmlBytes.length);
+                        // when the index.html gets to big, only out.write does not work anymore!
+                        // so it needs to be split
+                        int i = 0;
+                        while (i * 1024 < uploadHtmlBytes.length) {
+                            out.write(uploadHtmlBytes, i * 1024, i * 1024 + 1023 < uploadHtmlBytes.length ? 1024 : uploadHtmlBytes.length - i * 1024);
+                            i++;
+                        }
+                    } else {
+                        // error 404
+                        httpExchange.getResponseHeaders().add("Content-Type", "text/plain");
+                        String errorMsg = "404 - Page not found!";
+                        httpExchange.sendResponseHeaders(404, errorMsg.length());
+                        out.write(errorMsg.getBytes());
+                    }
+                    out.close();
+                }
+        );
+    }
+
 
 }

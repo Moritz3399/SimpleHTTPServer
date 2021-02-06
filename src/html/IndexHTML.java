@@ -1,3 +1,8 @@
+package html;
+
+import main.Config;
+import main.NavItems;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,15 +14,10 @@ public class IndexHTML {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html>\n");
         sb.append("<html>\n");
-        sb.append("<head>\n");
-        sb.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
-        sb.append("<meta charset=\"UTF-8\">\n");
-        // https://css-tricks.com/emojis-as-favicons/
-        sb.append("<link rel=\"icon\" href=\"favicon.svg\"/>\n");
-        sb.append("<link rel=\"apple-touch-icon\" href=\"favicon.svg\"/>\n");
-        sb.append(String.format("<title>%s</title>\n", Config.title));
-        sb.append("</head>\n");
-        sb.append("<body style=\"margin-left:20px; margin-top:20px\">\n");
+        sb.append(HTMLHead.get());
+//        sb.append("<body style=\"margin-left:20px; margin-top:20px\">\n");
+        sb.append("<body>\n");
+        sb.append(NavBarHTML.get(NavItems.Files));
         sb.append(String.format("<p>Files in <b>%s</b></p>", Config.pathToFiles));
         for (String s : getFileHTMLElements()) sb.append(String.format("%s\n", s));
         sb.append("</body></html>");

@@ -1,3 +1,4 @@
+package main;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.net.UnknownHostException;
 public class StartSimpleHttpServer {
 
     public static void main(String[] args) {
-        Logger.always("Welcome to the Simple HTTP Server.");
+        Logger.always("Welcome to the Simple HTTP main.Server.");
         Logger.always("For more information call this program with the 'help' parameter.");
         // Parameters: key=value
         for (String arg : args) {
@@ -104,7 +105,7 @@ public class StartSimpleHttpServer {
 
     private static void printHelp() {
         Logger.help("");
-        Logger.help("This is the help menu for the Simple HTTP Server");
+        Logger.help("This is the help menu for the Simple HTTP main.Server");
         Logger.help("There are multiple options available.");
         Logger.help("Despite the help option, options need to be provided");
         Logger.help("as key value pair in patter [key]=[value]");
@@ -125,7 +126,7 @@ public class StartSimpleHttpServer {
         Logger.help("              Find emojis decimal values at:");
         Logger.help("                  https://www.w3schools.com/charsets/ref_emoji_smileys.asp");
         Logger.help("   title    - Set the website title");
-        Logger.help("              Default: Simple HTTP Server");
+        Logger.help("              Default: Simple HTTP main.Server");
         Logger.help("              Example: \"title=Hello World\"");
         Logger.help("   port     - Set the port to use");
         Logger.help("              Default: 80");
