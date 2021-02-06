@@ -100,7 +100,6 @@ public class StartSimpleHttpServer {
 
         // TODO: Exit option from command line
         // TODO: Exit option from browser /stop or something with a dialog
-
     }
 
     private static void printHelp() {

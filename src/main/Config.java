@@ -12,8 +12,8 @@ public class Config {
     public static String title = "Simple HTTP Server";
     public static String faviconUnicodeEmoji = "&#128579;";
     public static int logLevel = 0;
-    public static boolean allowUpload = true;
-    public static boolean allowPrint = true;
+    public static boolean allowUpload = true; // TODO: Make use of that
+    public static boolean allowPrint = true; // TODO: Make use of that
 
 
     public static void logConfig(){

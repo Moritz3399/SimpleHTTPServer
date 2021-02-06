@@ -21,7 +21,7 @@ public class FileUpload {
         filename = validateFilename(filename);
         // write file to disk
         byte[] newFileBytes = Arrays.copyOfRange(requestBytes, headerEnd, footerEnd - boundary.length());
-        FileOutputStream fos = null;
+        FileOutputStream fos;
         try {
             fos = new FileOutputStream(new File(filename));
             fos.write(newFileBytes);
@@ -49,19 +49,14 @@ public class FileUpload {
         return new byte[0];
     }
 
-    /**
-     * Find a string in a byte array. Will return the last inclusive byte index of the array.
-     * @param bytes
-     * @param str
-     * @param startAt
-     * @return -1  if not found, otherwise the last index of the sequence.
-     */
+
+//    Find a string in a byte array. Will return the last inclusive byte index of the array.
+//    return -1  if not found, otherwise the last index of the sequence.
     private static int findStringInByteArray(byte[] bytes, String str, int startAt){
         byte[] strBytes = str.getBytes();
         outer:
         for(int i = startAt; i< bytes.length - strBytes.length + 1; i++){
             if(bytes[i] == strBytes[0]){
-                inner:
                 for(int j = 1; j <strBytes.length; j++){
                     if(bytes[i+j] != strBytes[j]) continue outer;
                 }
